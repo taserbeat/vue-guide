@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 const inputName = ref<string>("");
 const inputAge = ref<number>(0);
@@ -18,6 +18,14 @@ const handleRegister = () => {
   inputName.value = "";
   inputAge.value = 0;
 };
+
+const maxNameLength = 14;
+
+const isValidName = computed(() => inputName.value.length <= maxNameLength);
+
+const color = computed(() =>
+  isValidName.value ? "white" : "rgb(244,194,190)"
+);
 </script>
 
 <template>
@@ -25,8 +33,11 @@ const handleRegister = () => {
     <div class="input-container">
       <div class="input-column">
         <span>name:</span>
-        <input class="input" v-model="inputName" />
+        <input class="input-name" v-model="inputName" />
       </div>
+      <span class="error-message" v-if="!isValidName"
+        >name length must be {{ maxNameLength }} or less</span
+      >
 
       <div class="input-column">
         <span>age:</span>
@@ -34,7 +45,13 @@ const handleRegister = () => {
       </div>
     </div>
 
-    <button class="register-button" @click="handleRegister">register</button>
+    <button
+      class="register-button"
+      @click="handleRegister"
+      :disabled="!isValidName"
+    >
+      register
+    </button>
   </div>
 </template>
 
@@ -62,6 +79,15 @@ const handleRegister = () => {
   width: 200px;
   display: flex;
   justify-content: space-between;
+}
+
+.input-name {
+  background-color: v-bind(color);
+}
+
+.error-message {
+  font-size: 12px;
+  color: rgb(244, 194, 190);
 }
 
 input {
