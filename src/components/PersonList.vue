@@ -9,8 +9,10 @@ defineProps<Props>();
 
 const emit = defineEmits(["delete"]);
 
-const handleDelete = (id: number) => {
-  emit("delete", id);
+const handleDelete = (id: number, name: string) => {
+  if (confirm(`Delete ${name}?`)) {
+    emit("delete", id);
+  }
 };
 </script>
 
@@ -20,7 +22,7 @@ const handleDelete = (id: number) => {
 
     <span>age: {{ person.age }}</span>
 
-    <button class="delete-button" @click="handleDelete(person.id)">
+    <button class="delete-button" @click="handleDelete(person.id, person.name)">
       delete
     </button>
   </li>
